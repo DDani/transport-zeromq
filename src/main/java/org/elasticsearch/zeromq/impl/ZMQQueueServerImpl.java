@@ -186,7 +186,7 @@ public class ZMQQueueServerImpl extends
 	protected void doStop() throws ElasticsearchException {
 		logger.debug("Stopping ØMQ server...");
 	}
-
+ 
     @Override public BoundTransportAddress boundAddress() {
         return boundAddress;
     }
