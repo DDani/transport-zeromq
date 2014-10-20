@@ -12,6 +12,7 @@
 
 	<properties>
 		<elasticsearch.version>1.3.2</elasticsearch.version>
+		<jeromq.version>0.3.4</jeromq.version>
 	</properties>
 
 	<scm>
@@ -38,8 +39,6 @@
 			<version>0.1</version>
 			<scope>test</scope>
 		</dependency>
-
-
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
@@ -55,17 +54,11 @@
 			<artifactId>elasticsearch</artifactId>
 			<version>${elasticsearch.version}</version>
 		</dependency>
-		<!-- <dependency> <groupId>org.elasticsearch.zeromq</groupId> <artifactId>jzmq</artifactId> 
-			<version>1.0.0</version> <scope>system</scope> <systemPath>${project.basedir}/jzmq-1.0.0.jar</systemPath> 
-			</dependency> -->
-
-		<!-- <dependency> <groupId>org.zeromq</groupId> <artifactId>jzmq</artifactId> 
-			<version>3.1.0</version> </dependency> -->
-
+		
 		<dependency>
 			<groupId>org.zeromq</groupId>
 			<artifactId>jeromq</artifactId>
-			<version>0.3.4</version>
+			<version>${jeromq.version}</version>
 		</dependency>
 
 

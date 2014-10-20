@@ -1,42 +1,39 @@
 h1. ØMQ transport layer plugin for Elasticsearch
 
-This plugin exposes the REST interfaces of "Elasticsearch":http://www.elasticsearch.org over "ZeroMQ":http://www.zeromq.org/ messaging library.
+This is a fork of https://github.com/tlrx/transport-zeromq that uses JeroMQ (a pure Java implementation of ZeroMQ) instead of the native library Jzmq.
+
+Also, this fork is build (right now) against ElasticSearch 1.3.2.
+
+Please, refer to the original project for instructions
 
 h2. Versions
 
 |_. ØMQ Transport Plugin|_. ElasticSearch	|_. ØMQ	|
-|  master (0.0.3)   	|  master (0.19.2)	| 2.2	|
-|     0.0.2         	|     0.18.2		| 2.1	|
+|  master (0.0.3)   	|  master (1.3.2)	| 3.2.5	|
 
 
 h2. Installation
 
 h3. Requirements
 
-Before installing and using this plugin with Elasticsearch (0.19.2), you need to install ZeroMQ Java Binding library (2.2) on your system. This binding uses native library to work. 
-
-The "ZeroMQ":http://www.zeromq.org/ website is a great place to start installing the libraries, specially the "Java binding page":http://www.zeromq.org/bindings:java
-
-If you want to develop or modify this plugin, I encourage you to read the "ØMQ - The Guide":http://zguide.zeromq.org/page:all which is very well documented. 
+Just nothing!. This fork uses a native implementation in Java of ZeroMQ client, so installing platform ZeroMQ libraries or Java bindings is not required
 
 h3. Installation
 
 Type the command in your favorite shell :
 
 <pre>
-$ bin\plugin -install tlrx/transport-zeromq/0.0.3
+$ bin\plugin -install ddani/transport-zeromq/0.0.3
 </pre>
 
 Elasticsearch automatically install the plugin:
 
 <pre>
--> Installing tlrx/transport-zeromq/0.0.3...
-Trying https://github.com/downloads/tlrx/transport-zeromq/transport-zeromq-0.0.3.zip...
+-> Installing ddani/transport-zeromq/0.0.3...
+Trying https://github.com/downloads/ddani/transport-zeromq/transport-zeromq-0.0.3.zip...
 Downloading ..........DONE
 Installed transport-zeromq
 </pre>
-
-Then, you must replace the file *plugins/transport-zeromq/jzmq-1.0.0.jar* with the Java binding compiled for your system.
 
 Finally, edit Elasticsearch configuration file @config/elasticsearch.yml@ and add the properties:
 
@@ -48,16 +45,6 @@ zeromq.workers.bind: inproc://es_zeromq_workers
 </pre>
 
 Restart Elasticsearch.
-
-If you have the following error
-<pre>Initialization Failed ...
-1) UnsatisfiedLinkError[no jzmq in java.library.path]2) NoClassDefFoundError[Could not initialize class org.zeromq.ZMQ]</pre>
-
-You can try to update your LD_LIBRARY_PATH:
-<pre>export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib</pre>
-
-You can also read the documentation of the "ØMQ Java binding":http://www.zeromq.org/bindings:java. 
-
 
 h2. Behind the scene
 
