@@ -3,15 +3,16 @@ package org.elasticsearch.zeromq;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-import org.elasticsearch.common.Bytes;
-import org.elasticsearch.rest.AbstractRestResponse;
+import org.elasticsearch.common.bytes.BytesArray;
+import org.elasticsearch.common.bytes.BytesReference;
+import org.elasticsearch.rest.RestResponse;
 import org.elasticsearch.rest.RestStatus;
 
 /**
  * @author tlrx
  * 
  */
-public class ZMQRestResponse extends AbstractRestResponse {
+public class ZMQRestResponse extends RestResponse {
 
 	private final RestStatus status;
 
@@ -34,6 +35,7 @@ public class ZMQRestResponse extends AbstractRestResponse {
 		return this;
 	}
 
+	/*
 	@Override
 	public byte[] content() throws IOException {
 		if (body == null) {
@@ -48,7 +50,7 @@ public class ZMQRestResponse extends AbstractRestResponse {
 			return 0;
 		}
 		return body.remaining();
-	}
+	}*/
 
 	@Override
 	public RestStatus status() {
@@ -78,7 +80,7 @@ public class ZMQRestResponse extends AbstractRestResponse {
 		ByteBuffer bContent = null;
 		
 		try {
-			bContent = ByteBuffer.wrap(content());
+			bContent = ByteBuffer.wrap(body.array());
 		} catch (Exception e) {
 			bContent = ByteBuffer.wrap(e.getMessage().getBytes());
 		}
@@ -92,4 +94,10 @@ public class ZMQRestResponse extends AbstractRestResponse {
 		
 		return payload.array();
 	}
+
+    @Override
+    public BytesReference content() {
+        // TODO Auto-generated method stub
+        return new BytesArray(body.array());
+    }
 }

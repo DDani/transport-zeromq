@@ -1,23 +1,25 @@
 package org.elasticsearch.zeromq;
 
-import org.elasticsearch.common.Bytes;
-import org.elasticsearch.common.Unicode;
-import org.elasticsearch.rest.support.AbstractRestRequest;
-import org.elasticsearch.rest.support.RestUtils;
-import org.elasticsearch.zeromq.exception.NoURIFoundZMQException;
-import org.elasticsearch.zeromq.exception.UnsupportedMethodZMQException;
-import org.elasticsearch.zeromq.exception.ZMQTransportException;
 
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+
+import org.elasticsearch.common.bytes.BytesArray;
+import org.elasticsearch.common.bytes.BytesReference;
+import org.elasticsearch.rest.RestRequest;
+import org.elasticsearch.rest.support.RestUtils;
+import org.elasticsearch.zeromq.exception.NoURIFoundZMQException;
+import org.elasticsearch.zeromq.exception.UnsupportedMethodZMQException;
+import org.elasticsearch.zeromq.exception.ZMQTransportException;
 
 /**
  * @author tlrx
  * 
  */
-public class ZMQRestRequest extends AbstractRestRequest {
+public class ZMQRestRequest extends RestRequest {
 
 	private final List<byte[]> parts;
 
@@ -114,7 +116,7 @@ public class ZMQRestRequest extends AbstractRestRequest {
 		return false;
 	}
 
-	@Override
+	/*@Override
 	public byte[] contentByteArray() {
 		if (body == null) {
 			return Bytes.EMPTY_ARRAY;
@@ -145,7 +147,7 @@ public class ZMQRestRequest extends AbstractRestRequest {
 		}
 		return Unicode.fromBytes(contentByteArray(), contentByteArrayOffset(),
 				contentLength());
-	}
+	}*/
 
 	@Override
 	public String header(String name) {
@@ -177,5 +179,17 @@ public class ZMQRestRequest extends AbstractRestRequest {
 		}
 		return value;
 	}
+
+    @Override
+    public BytesReference content() {
+
+        return new BytesArray(body.array());
+    }
+
+    @Override
+    public Iterable<Entry<String, String>> headers() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 }
