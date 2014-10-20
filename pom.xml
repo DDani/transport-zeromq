@@ -16,9 +16,9 @@
 	</properties>
 
 	<scm>
-		<url>http://github.com/DDani/transport-zeromq.git</url>
-		<connection>scm:git:git://github.com/DDani/transport-zeromq.git</connection>
-		<developerConnection>scm:git:git@github.com:DDani/transport-zeromq.git</developerConnection>
+		<url>scm:git:ssh://git@github.com/DDani/transport-zeromq.git</url>
+		<connection>scm:git:ssh://git@github.com/DDani/transport-zeromq.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/transport-zeromq.git</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
 
