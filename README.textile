@@ -23,16 +23,16 @@ h3. Installation
 Type the command in your favorite shell :
 
 <pre>
-$ bin\plugin -install ddani/transport-zeromq/0.0.3
+$ bin\plugin -install ddani/transport-zeromq-jeromq/0.0.6
 </pre>
 
 Elasticsearch automatically install the plugin:
 
 <pre>
--> Installing ddani/transport-zeromq/0.0.3...
-Trying https://github.com/downloads/ddani/transport-zeromq/transport-zeromq-0.0.3.zip...
+-> Installing ddani/transport-zeromq-jeromq/0.0.6...
+Trying https://github.com/downloads/ddani/transport-zeromq-jeromq/transport-zeromq-jeromq-0.0.6.zip...
 Downloading ..........DONE
-Installed transport-zeromq
+Installed transport-zeromq-jeromq
 </pre>
 
 Finally, edit Elasticsearch configuration file @config/elasticsearch.yml@ and add the properties:

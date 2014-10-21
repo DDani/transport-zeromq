@@ -46,7 +46,6 @@ public class ZMQSocket implements Runnable {
         this.waitForSocketsClose = waitForSocketsClose;
 	}
 
-	@Override
 	public void run() {
 
 		socket = context.socket(ZMQ.ROUTER);

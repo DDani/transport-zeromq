@@ -116,39 +116,6 @@ public class ZMQRestRequest extends RestRequest {
 		return false;
 	}
 
-	/*@Override
-	public byte[] contentByteArray() {
-		if (body == null) {
-			return Bytes.EMPTY_ARRAY;
-		}
-		return body.array();
-	}
-
-	@Override
-	public int contentByteArrayOffset() {
-		if (body == null) {
-			return 0;
-		}
-		return body.arrayOffset() + body.position();
-	}
-
-	@Override
-	public int contentLength() {
-		if (body == null) {
-			return 0;
-		}
-		return body.remaining();
-	}
-
-	@Override
-	public String contentAsString() {
-		if (body == null) {
-			return "";
-		}
-		return Unicode.fromBytes(contentByteArray(), contentByteArrayOffset(),
-				contentLength());
-	}*/
-
 	@Override
 	public String header(String name) {
 		return null;
@@ -171,14 +138,7 @@ public class ZMQRestRequest extends RestRequest {
 		return params;
 	}
 
-	@Override
-	public String param(String key, String defaultValue) {
-		String value = params.get(key);
-		if (value == null) {
-			return defaultValue;
-		}
-		return value;
-	}
+	
 
     @Override
     public BytesReference content() {
@@ -188,8 +148,20 @@ public class ZMQRestRequest extends RestRequest {
 
     @Override
     public Iterable<Entry<String, String>> headers() {
-        // TODO Auto-generated method stub
         return null;
     }
+
+    public String param(String key, String defaultValue) {
+        String value = params.get(key);
+        if (value == null) {
+            return defaultValue;
+        }
+        return value;
+    }
+    
+    
+    
+    
+  
 
 }

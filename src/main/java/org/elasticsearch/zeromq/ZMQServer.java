@@ -52,7 +52,6 @@ public class ZMQServer extends AbstractLifecycleComponent<ZMQServer> {
 		logger.debug("Starting ØMQ server...");
 		daemonThreadFactory(settings, "zeromq_server").newThread(
 				new Runnable() {
-					@Override
                     public void run() {
                         transport.start();
                     }

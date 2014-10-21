@@ -33,21 +33,15 @@ import org.elasticsearch.zeromq.ZMQServerModule;
 /**
  * @author tlrx
  */
-public class ZMQTransportPlugin extends AbstractPlugin {
+public class ZMQJeroMQTransportPlugin extends AbstractPlugin {
 
     private final Settings settings;
 
-    public ZMQTransportPlugin(Settings settings) {
+    public ZMQJeroMQTransportPlugin(Settings settings) {
         this.settings = settings;
     }
 
-    @Override public String name() {
-        return "transport-zeromq";
-    }
-
-    @Override public String description() {
-        return "Exports elasticsearch REST APIs over ØMQ";
-    }
+  
 
     @Override public Collection<Class<? extends Module>> modules() {
         Collection<Class<? extends Module>> modules = newArrayList();
@@ -63,5 +57,15 @@ public class ZMQTransportPlugin extends AbstractPlugin {
             services.add(ZMQServer.class);
         }
         return services;
+    }
+
+
+
+    public String name() {
+        return "transport-zeromq-jeromq";
+    }
+
+    public String description() {
+        return "Exports elasticsearch REST APIs over ØMQ using pure Java ØMQ implementation";
     }
 }
