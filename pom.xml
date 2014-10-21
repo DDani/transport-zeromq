@@ -5,7 +5,7 @@
 	<groupId>org.elasticsearch.plugin</groupId>
 	<artifactId>transport-zeromq-jeromq</artifactId>
 	<packaging>jar</packaging>
-	<version>0.0.6</version>
+	<version>0.0.7-SNAPSHOT</version>
 	<name>ØMQ transport layer plugin for Elasticsearch using pure Java Implementation</name>
 	<url>https://github.com/DDani/transport-zeromq-jeromq</url>
 
