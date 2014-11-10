@@ -24,6 +24,8 @@ package org.elasticsearch.zeromq.exception;
  */
 public class UnsupportedMethodZMQException extends ZMQTransportException {
 
+    private static final long serialVersionUID = -906931205354567855L;
+
     public UnsupportedMethodZMQException(String method) {
         super("Unsupported method " + method);
     }

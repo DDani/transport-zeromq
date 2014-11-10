@@ -24,6 +24,8 @@ package org.elasticsearch.zeromq.exception;
  */
 public class NoURIFoundZMQException extends ZMQTransportException {
 
+    private static final long serialVersionUID = 4686648157397653085L;
+
     public NoURIFoundZMQException() {
         super("No URI found in message");
     }

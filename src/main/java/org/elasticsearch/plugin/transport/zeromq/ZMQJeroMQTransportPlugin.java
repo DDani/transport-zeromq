@@ -35,36 +35,38 @@ import org.elasticsearch.zeromq.ZMQServerModule;
  */
 public class ZMQJeroMQTransportPlugin extends AbstractPlugin {
 
+    private static final String ZEROMQ_ENABLED = "zeromq.enabled";
     private final Settings settings;
 
     public ZMQJeroMQTransportPlugin(Settings settings) {
         this.settings = settings;
     }
 
-  
-
-    @Override public Collection<Class<? extends Module>> modules() {
+    @Override
+    public Collection<Class<? extends Module>> modules() {
         Collection<Class<? extends Module>> modules = newArrayList();
-        if (settings.getAsBoolean("zeromq.enabled", true)) {
+        if (settings.getAsBoolean(ZEROMQ_ENABLED, true)) {
             modules.add(ZMQServerModule.class);
         }
         return modules;
     }
 
-    @Override public Collection<Class<? extends LifecycleComponent>> services() {
+    @SuppressWarnings("rawtypes")
+    @Override
+    public Collection<Class<? extends LifecycleComponent>> services() {
         Collection<Class<? extends LifecycleComponent>> services = newArrayList();
-        if (settings.getAsBoolean("zeromq.enabled", true)) {
+        if (settings.getAsBoolean(ZEROMQ_ENABLED, true)) {
             services.add(ZMQServer.class);
         }
         return services;
     }
 
-
-
+    @Override
     public String name() {
         return "transport-zeromq-jeromq";
     }
 
+    @Override
     public String description() {
         return "Exports elasticsearch REST APIs over ØMQ using pure Java ØMQ implementation";
     }

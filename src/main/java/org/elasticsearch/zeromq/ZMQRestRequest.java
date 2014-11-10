@@ -21,128 +21,117 @@ import org.elasticsearch.zeromq.exception.ZMQTransportException;
  */
 public class ZMQRestRequest extends RestRequest {
 
-	private final List<byte[]> parts;
+    private final List<byte[]> parts;
+    private Method method;
+    private String uri;
+    private String rawPath;
+    private final Map<String, String> params;
+    private ByteBuffer body;
 
-	private Method method;
+    public ByteBuffer getBody() {
+        return body;
+    }
 
-	private String uri;
+    public void setBody(ByteBuffer body) {
+        this.body = body;
+    }
 
-	private String rawPath;
+    public ZMQRestRequest(String payload, List<byte[]> parts) {
+        super();
+        this.parts = parts;
+        this.params = new HashMap<String, String>();
+        parse(payload);
+    }
 
-	private final Map<String, String> params;
-
-	public ByteBuffer body;
-
-	public ZMQRestRequest(String payload, List<byte[]> parts) {
-		super();
-		this.parts = parts;
-		this.params = new HashMap<String, String>();
-
-		parse(payload);
-	}
-
-	private void parse(String payload) {
-
-		if (payload != null) {
-
-			String[] s = payload.split("\\|");
-
-            if(s.length <2){
+    private void parse(String payload) {
+        if (payload != null) {
+            String[] payloadArray = payload.split("\\|");
+            if (payloadArray.length < 2) {
                 throw new ZMQTransportException("Invalid message format");
             }
-			
-			// Method
-			String m = s[0];
-
-			if ("GET".equalsIgnoreCase(m)) {
-				this.method = Method.GET;
-			} else if ("POST".equalsIgnoreCase(m)) {
-				this.method = Method.POST;
-			} else if ("PUT".equalsIgnoreCase(m)) {
-				this.method = Method.PUT;
-			} else if ("DELETE".equalsIgnoreCase(m)) {
-				this.method = Method.DELETE;
-			} else if ("OPTIONS".equalsIgnoreCase(m)) {
-				this.method = Method.OPTIONS;
-			} else if ("HEAD".equalsIgnoreCase(m)) {
-				this.method = Method.HEAD;
-			} else {
-                throw new UnsupportedMethodZMQException(m);
+            // Method
+            String methodName = payloadArray[0];
+            if ("GET".equalsIgnoreCase(methodName)) {
+                this.method = Method.GET;
+            } else if ("POST".equalsIgnoreCase(methodName)) {
+                this.method = Method.POST;
+            } else if ("PUT".equalsIgnoreCase(methodName)) {
+                this.method = Method.PUT;
+            } else if ("DELETE".equalsIgnoreCase(methodName)) {
+                this.method = Method.DELETE;
+            } else if ("OPTIONS".equalsIgnoreCase(methodName)) {
+                this.method = Method.OPTIONS;
+            } else if ("HEAD".equalsIgnoreCase(methodName)) {
+                this.method = Method.HEAD;
+            } else {
+                throw new UnsupportedMethodZMQException(methodName);
             }
-
-			// URI
-			this.uri = s[1];
-
-            if((this.uri == null) || ("".equals(this.uri)) || "null".equalsIgnoreCase(this.uri)){
+            // URI
+            this.uri = payloadArray[1];
+            if ((this.uri == null) || ("".equals(this.uri)) || "null".equalsIgnoreCase(this.uri)) {
                 throw new NoURIFoundZMQException();
             }
+            int pathEndPos = uri.indexOf('?');
+            if (pathEndPos < 0) {
+                this.rawPath = uri;
+            } else {
+                this.rawPath = uri.substring(0, pathEndPos);
+                RestUtils.decodeQueryString(uri, pathEndPos + 1, params);
+            }
+            // Content
+            int indexContent = payload.indexOf(ZMQSocket.SEPARATOR, methodName.length() + uri.length());
+            body = ByteBuffer.wrap(payload.substring(indexContent + 1).getBytes());
+        }
+    }
 
-			int pathEndPos = uri.indexOf('?');
-			if (pathEndPos < 0) {
-				this.rawPath = uri;
-			} else {
-				this.rawPath = uri.substring(0, pathEndPos);
-				RestUtils.decodeQueryString(uri, pathEndPos + 1, params);
-			}
+    @Override
+    public Method method() {
+        return this.method;
+    }
 
-			// Content
-			int indexContent = payload.indexOf(ZMQSocket.SEPARATOR, m.length() + uri.length());
-			body = ByteBuffer.wrap(payload.substring(indexContent+1).getBytes());
-		}
-	}
+    @Override
+    public String uri() {
+        return this.uri;
+    }
 
-	@Override
-	public Method method() {
-		return this.method;
-	}
+    @Override
+    public String rawPath() {
+        return this.rawPath;
+    }
 
-	@Override
-	public String uri() {
-		return this.uri;
-	}
+    @Override
+    public boolean hasContent() {
+        return ((body != null) && (body.remaining() > 0));
+    }
 
-	@Override
-	public String rawPath() {
-		return this.rawPath;
-	}
+    @Override
+    public boolean contentUnsafe() {
+        return false;
+    }
 
-	@Override
-	public boolean hasContent() {
-		return ((body != null) && (body.remaining() > 0));
-	}
+    @Override
+    public String header(String name) {
+        return null;
+    }
 
-	@Override
-	public boolean contentUnsafe() {
-		return false;
-	}
+    @Override
+    public boolean hasParam(String key) {
+        return params.containsKey(key);
+    }
 
-	@Override
-	public String header(String name) {
-		return null;
-	}
+    @Override
+    public String param(String key) {
+        String param = params.get(key);
+        return param;
+    }
 
-	@Override
-	public boolean hasParam(String key) {
-		return params.containsKey(key);
-	}
-
-	@Override
-	public String param(String key) {
-
-		String p = params.get(key);
-		return p;
-	}
-
-	@Override
-	public Map<String, String> params() {
-		return params;
-	}
-
-	
+    @Override
+    public Map<String, String> params() {
+        return params;
+    }
 
     @Override
     public BytesReference content() {
-
         return new BytesArray(body.array());
     }
 
@@ -151,6 +140,7 @@ public class ZMQRestRequest extends RestRequest {
         return null;
     }
 
+    @Override
     public String param(String key, String defaultValue) {
         String value = params.get(key);
         if (value == null) {
@@ -158,10 +148,8 @@ public class ZMQRestRequest extends RestRequest {
         }
         return value;
     }
-    
-    
-    
-    
-  
 
+    public List<byte[]> getParts() {
+        return parts;
+    }
 }

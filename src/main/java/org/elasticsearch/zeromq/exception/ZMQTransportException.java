@@ -26,6 +26,8 @@ import org.elasticsearch.transport.TransportException;
  */
 public class ZMQTransportException extends TransportException {
 
+    private static final long serialVersionUID = -1825757487088623177L;
+
     public ZMQTransportException(String msg) {
         super(msg);
     }

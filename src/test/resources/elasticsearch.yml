@@ -11,7 +11,7 @@ index:
         type: memory
 
 # ZeroMQ Transport config
-zeromq.router.bind: tcp://*:9800
-zeromq.workers.threads: 2
+zeromq.router.bind: tcp://*:9700
+zeromq.workers.threads: 3
 zeromq.workers.bind: inproc://es_zeromq_workers
 

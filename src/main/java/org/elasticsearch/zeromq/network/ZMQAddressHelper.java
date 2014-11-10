@@ -58,21 +58,16 @@ public class ZMQAddressHelper {
     }
 
     private Address resolve(String address) {
-
         if (address == null) {
             return null;
         }
         Address ad = new Address();
         String[] splits = address.split(":");
-
         if (splits == null || splits.length <= 1) {
             return null;
-
         } else {
             ad.setType(splits[0]);
-
             if ("tpc".equals(splits[0])) {
-
                 String host = splits[1].replaceFirst("//", "");
                 if ("*".equals(host)) {
                     ad.setHostname("localhost");
@@ -80,7 +75,6 @@ public class ZMQAddressHelper {
                     ad.setHostname(host);
                 }
             }
-
             if (splits.length >= 3) {
                 int port = 0;
                 try {
@@ -97,24 +91,19 @@ public class ZMQAddressHelper {
 
     public static String getHostName(String address) {
         Address ad = new ZMQAddressHelper().resolve(address);
-
         if (ad != null) {
             return ad.getHostname();
         } else {
             return null;
         }
-
     }
 
     public static int getPort(String address) {
         Address ad = new ZMQAddressHelper().resolve(address);
-
         if (ad != null) {
             return ad.getPort();
         } else {
             return 0;
         }
-
     }
-
 }

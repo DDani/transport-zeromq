@@ -37,52 +37,47 @@ import org.zeromq.ZMQException;
  */
 public class ZMQRestImpl extends AbstractComponent {
 
-	private final RestController restController;
+    private final RestController restController;
 
-	@Inject
-	public ZMQRestImpl(Settings settings, RestController restController) {
-		super(settings);
-		this.restController = restController;
-	}
+    @Inject
+    public ZMQRestImpl(Settings settings, RestController restController) {
+        super(settings);
+        this.restController = restController;
+    }
 
-	public ZMQRestResponse process(ZMQRestRequest request){
-		
-		final CountDownLatch latch = new CountDownLatch(1);
+    public ZMQRestResponse process(ZMQRestRequest request) {
+        final CountDownLatch latch = new CountDownLatch(1);
         final AtomicReference<ZMQRestResponse> ref = new AtomicReference<ZMQRestResponse>();
-        
-		this.restController.dispatchRequest(request, new RestChannel(request) {
-			
-			@Override
-			public void sendResponse(RestResponse response) {
-				try {
-					if(logger.isTraceEnabled()){
-						logger.info("Response to ØMQ client: {}", new String(response.content().toBytes()));	
-					}
-					ref.set(convert(response));
-				} catch (IOException e) {
-					// ignore
-				}
-				latch.countDown();
-			}
-		});
-		
-		try {
+        this.restController.dispatchRequest(request, new RestChannel(request) {
+            @Override
+            public void sendResponse(RestResponse response) {
+                try {
+                    if (logger.isTraceEnabled()) {
+                        logger.info("Response to ØMQ client: {}", new String(response.content().toBytes()));
+                    }
+                    ref.set(convert(response));
+                } catch (IOException e) {
+                    logger.warn("Exception received when writting to client", e);
+                }
+                latch.countDown();
+            }
+        });
+        try {
             latch.await();
             return ref.get();
         } catch (Exception e) {
-            throw new ZMQException( 0);
+            throw new ZMQException(0);
         }
-	}
-	
-	private ZMQRestResponse convert(RestResponse response) throws IOException {
-		ZMQRestResponse zmqResponse = new ZMQRestResponse(response.status());
+    }
 
-		if(response.contentType() != null){
-			zmqResponse.setContentType(response.contentType());
-		}
+    private ZMQRestResponse convert(final RestResponse response) throws IOException {
+        ZMQRestResponse zmqResponse = new ZMQRestResponse(response.status());
+        if (response.contentType() != null) {
+            zmqResponse.setContentType(response.contentType());
+        }
         if (response.content().length() > 0) {
             if (response.contentThreadSafe()) {
-            	zmqResponse.setBody(ByteBuffer.wrap(response.content().array(), 0, response.content().length()));
+                zmqResponse.setBody(ByteBuffer.wrap(response.content().array(), 0, response.content().length()));
             } else {
                 // argh!, we need to copy it over since we are not on the same thread...
                 byte[] body = new byte[response.content().length()];

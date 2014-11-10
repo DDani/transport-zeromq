@@ -33,11 +33,15 @@ public class ZMQServerModule extends AbstractModule {
     public ZMQServerModule(Settings settings) {
         this.settings = settings;
     }
- 
-    @Override 
+
+    @Override
     protected void configure() {
         bind(ZMQRestImpl.class).asEagerSingleton();
         bind(ZMQServerTransport.class).to(ZMQQueueServerImpl.class).asEagerSingleton();
         bind(ZMQServer.class).asEagerSingleton();
+    }
+
+    public Settings getSettings() {
+        return settings;
     }
 }
